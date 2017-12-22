@@ -22,7 +22,8 @@ def game_index(request):
         if form.is_valid():
             how_many_digits = int(request.POST['how_many_digits'])
             # game_id должен быть уникальным для каждой игры
-            game_id = request.session['_auth_user_id']
+            # game_id = request.session['_auth_user_id']
+            game_id = 1
             request.session['game_type'] = request.POST['game_type']
             if request.POST['game_type'] == '1':
                 secret_number = ''.join(choice(list(permutations("0123456789", how_many_digits))))
@@ -45,7 +46,7 @@ def game_index(request):
 # обрабатывает данные, полученные от игрока и отправляет ответ. Работает только для "игры человека"
 def game_process(request):
     # game = GameData.objects.get(pk=game_id)
-    game = cache.get(request.session['_auth_user_id'])
+    game = cache.get(1)
     def game_with_human():
         class GameWithHumanForm(forms.Form):
             player_number = forms.CharField(label='Ваше число', max_length=game['digits'],
@@ -75,7 +76,7 @@ def game_process(request):
             form = GameWithHumanForm()
             # game.update({'form': form})
 
-        cache.set(request.session['_auth_user_id'], game)
+        cache.set(1, game)
         game.update({'form': form})
         return render(request, 'guess_the_number/player_game.html', game)
 
@@ -137,7 +138,7 @@ def game_process(request):
         else:
             form = GameWithComputerForm()
 
-        cache.set(request.session['_auth_user_id'], game)
+        cache.set(1, game)
         game.update({'form': form})
         return render(request, 'guess_the_number/computer_game.html', game)
 
