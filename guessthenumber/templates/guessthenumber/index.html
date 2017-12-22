@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Угадай число</title>
+</head>
+<body>
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="{% static 'guessthenumber/style.css' %}" />
+
+    <form id="player_game" action="{% url "guessthenumber:index" %}" method="post">
+        {% csrf_token %}
+        <table>
+            <tr>
+                <td>{{ form.game_type.label }}</td>
+                {% for radio in form.game_type %}
+                    <td>{{ radio }}</td>
+                {% endfor %}
+            </tr>
+        </table>
+        <table>
+            <tr>
+                <td>{{ form.how_many_digits.label }}</td>
+                <td>{{ form.how_many_digits }}</td>
+                <td><input type="submit" value="Начать игру" /></td>
+            </tr>
+        </table>
+    </form>
+</body>
+</html>
