@@ -14,7 +14,7 @@ from itertools import permutations, combinations
 
 
 def home_page(request):
-    return render(request, 'guessthenumber/home.html')
+    return render(request, 'guess_the_number/home.html')
 
 def game_index(request):
     if request.method == 'POST':
@@ -30,16 +30,16 @@ def game_index(request):
                 # game_data.save()
                 cache.set(game_id, {'secret_number': secret_number, 'move': 1, 'cows': 0, 'bulls': 0,
                                     'digits': how_many_digits})
-                return redirect('/guessthenumber/game/')
+                return redirect('/guess_the_number/game/')
             else:
                 all_numbers = list(permutations("0123456789", how_many_digits))
                 cache.set(game_id, {'all_numbers': all_numbers, 'move': 1, 'digits': how_many_digits,
                                     'my_number': ''.join(choice(all_numbers)), 'game_over': False})
-                return redirect('/guessthenumber/game/')
+                return redirect('/guess_the_number/game/')
     else:
         form = InitializeForm()
 
-    return render(request, 'guessthenumber/index.html', {'form': form})
+    return render(request, 'guess_the_number/index.html', {'form': form})
 
 
 # обрабатывает данные, полученные от игрока и отправляет ответ. Работает только для "игры человека"
@@ -77,7 +77,7 @@ def game_process(request):
 
         cache.set(request.session['_auth_user_id'], game)
         game.update({'form': form})
-        return render(request, 'guessthenumber/player_game.html', game)
+        return render(request, 'guess_the_number/player_game.html', game)
 
     def game_with_computer():
 
@@ -92,7 +92,7 @@ def game_process(request):
             if form.is_valid():
                 if request.POST['is_correct_number'] == '1':
                     game['game_over'] = True
-                    return render(request, 'guessthenumber/computer_game.html', game)
+                    return render(request, 'guess_the_number/computer_game.html', game)
 
                 # фильтрует варианты по "коровам"
                 def cows_filter(cows, number, variants):
@@ -131,7 +131,7 @@ def game_process(request):
                     game['error_message'] = 'Одно из полученных условий противоречит другому: такого числа не ' \
                                             'существует.'
                     return HttpResponse(game['error_message'] +
-                                        '<br><a id="id_return" href="/guessthenumber/">Вернуться назад</a>')
+                                        '<br><a id="id_return" href="/guess_the_number/">Вернуться назад</a>')
 
                 form = GameWithComputerForm()
         else:
@@ -139,7 +139,7 @@ def game_process(request):
 
         cache.set(request.session['_auth_user_id'], game)
         game.update({'form': form})
-        return render(request, 'guessthenumber/computer_game.html', game)
+        return render(request, 'guess_the_number/computer_game.html', game)
 
     if request.session['game_type'] == '1':
         return game_with_human()

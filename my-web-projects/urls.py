@@ -1,4 +1,4 @@
-"""PythonDjangoProjects URL Configuration
+"""my-web-projects URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.0/topics/http/urls/
@@ -17,11 +17,11 @@ from django.contrib import admin, sites
 from django.urls import path
 
 from django.conf.urls import include, url
-from guessthenumber.views import home_page
+from guess_the_number.views import home_page
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^guessthenumber/', include('guessthenumber.urls')),
+    url(r'^guess_the_number/', include('guess_the_number.urls')),
     url(r'^polls_djbook_tutorial/', include('polls_djbook_tutorial.urls')),
     url(r'^', home_page)
 ]
