@@ -6,9 +6,9 @@
 </head>
 <body>
 {% load staticfiles %}
-<link rel="stylesheet" type="text/css" href="{% static 'guessthenumber/style.css' %}" />
+<link rel="stylesheet" type="text/css" href="{% static 'guess_the_number/style.css' %}" />
 
-    <form id="player_game" action="{% url "guessthenumber:index" %}" method="post">
+    <form id="player_game" action="{% url "guess_the_number:index" %}" method="post">
         {% csrf_token %}
         <table>
             <tr>
