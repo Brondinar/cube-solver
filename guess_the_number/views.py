@@ -101,7 +101,7 @@ def game_process(request):
                     pos_comb = list(combinations(number, cows))
                     for comb in pos_comb:
                         for num in variants:
-                            if set(num).issubset(set(num)) and set(
+                            if set(num).issubset(set(number)) and set(
                                             set(number) ^ set(comb)).isdisjoint(num):
                                 possible_variants.append(num)
                     return possible_variants
