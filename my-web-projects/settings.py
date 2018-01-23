@@ -25,7 +25,7 @@ SECRET_KEY = '495g#*1*27magc1-r0%msote&ne+(92b*kfv*rf)!i$p@)7($!'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['brondinar.pythonanywhere.com']
 
 
 # Application definition
