@@ -20,8 +20,10 @@ from django.conf.urls import include, url
 from guess_the_number.views import home_page
 
 urlpatterns = [
+    # url(r'^test_page/', test_page),
+    # url(r'^phones.json/', test_json),
     url(r'^admin/', admin.site.urls),
     url(r'^guess_the_number/', include('guess_the_number.urls')),
     url(r'^polls_djbook_tutorial/', include('polls_djbook_tutorial.urls')),
-    url(r'^', home_page)
+    url(r'^$', home_page)
 ]

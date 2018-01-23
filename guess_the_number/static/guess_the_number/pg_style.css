@@ -1,0 +1,8 @@
+div {
+    display: inline-block;
+    vertical-align: top;
+}
+
+div.game_form {
+    margin-right: 50px;
+}

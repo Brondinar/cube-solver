@@ -22,21 +22,19 @@ def game_index(request):
         if form.is_valid():
             how_many_digits = int(request.POST['how_many_digits'])
             # game_id должен быть уникальным для каждой игры
-            # game_id = request.session['_auth_user_id']
-            game_id = 1
+            game_id = request.session.session_key
             request.session['game_type'] = request.POST['game_type']
             if request.POST['game_type'] == '1':
                 secret_number = ''.join(choice(list(permutations("0123456789", how_many_digits))))
                 # game_data = GameData(id=game_id, secret_number=secret_number, move=1, cows=0, bulls=0)
                 # game_data.save()
                 cache.set(game_id, {'secret_number': secret_number, 'move': 1, 'cows': 0, 'bulls': 0,
-                                    'digits': how_many_digits})
-                return redirect('/guess_the_number/game/')
+                                    'digits': how_many_digits, 'player_numbers': []})
             else:
                 all_numbers = list(permutations("0123456789", how_many_digits))
                 cache.set(game_id, {'all_numbers': all_numbers, 'move': 1, 'digits': how_many_digits,
                                     'my_number': ''.join(choice(all_numbers)), 'game_over': False})
-                return redirect('/guess_the_number/game/')
+            return redirect('/guess_the_number/game/')
     else:
         form = InitializeForm()
 
@@ -46,11 +44,11 @@ def game_index(request):
 # обрабатывает данные, полученные от игрока и отправляет ответ. Работает только для "игры человека"
 def game_process(request):
     # game = GameData.objects.get(pk=game_id)
-    game = cache.get(1)
+    game = cache.get(request.session.session_key)
     def game_with_human():
         class GameWithHumanForm(forms.Form):
             player_number = forms.CharField(label='Ваше число', max_length=game['digits'],
-                                            validators=[RegexValidator(regex=r'^\d*$', message='Введите корректное число.'),
+                                            validators=[RegexValidator(regex=r'^\d*$', message='Ввод должен содержать только цифры'),
                                                         MinLengthValidator(game['digits'],
                                                                            message='Число должно состоять из %s символов.'
                                                                                    % game['digits'])])
@@ -60,31 +58,32 @@ def game_process(request):
             # game.update({'form': form})
             if form.is_valid():
                 player_number = request.POST.get('player_number')
-                game['move'] += 1
-                game['cows'] = len([1 for c in player_number if (c in game['secret_number'])])
                 game['bulls'] = len([1 for c in range(game['digits']) if game['secret_number'][c] == player_number[c]])
-                # проверка предназначена для корректного отображения ходов. Выглядит стремно, стоит переделать.
-                if game['bulls'] == game['digits']:
-                    game['move'] -= 1
+                game['cows'] = len([1 for c in player_number if (c in game['secret_number'])]) - game['bulls']
+
+                # логирует данные каждый ход игры для последующего отображения
+                game['player_numbers'].append({'move': game['move'], 'number': player_number, 'cows': game['cows'],
+                                               'bulls': game['bulls']})
+
+                if game['bulls'] != game['digits']:
+                    game['move'] += 1
                 # следующие две строки служат для удаления введенных значений после обновления формы, поскольку
                 # request.POST их автоматически вносит, а без него form.is_valid() выдает false. Возможно, стоит
                 # переделать.
                 form = GameWithHumanForm()
-                # game.update({'form': form})
 
         else:
             form = GameWithHumanForm()
-            # game.update({'form': form})
 
-        cache.set(1, game)
+        cache.set(request.session.session_key, game)
         game.update({'form': form})
         return render(request, 'guess_the_number/player_game.html', game)
 
     def game_with_computer():
 
         class GameWithComputerForm(forms.Form):
-            is_correct_number = forms.ChoiceField(label='Я угадал?', widget=forms.RadioSelect,
-                                                  choices=(('1', 'Да'), ('2', 'Нет')), initial=2)
+            # is_correct_number = forms.ChoiceField(label='Я угадал?', widget=forms.RadioSelect,
+            #                                       choices=(('1', 'Да'), ('2', 'Нет')), initial=2)
             cows = forms.IntegerField(label='Коровы:', max_value=game['digits'], min_value=0, initial=0)
             bulls = forms.IntegerField(label='Быки:', max_value=game['digits'], min_value=0, initial=0)
 
@@ -96,9 +95,9 @@ def game_process(request):
                     return render(request, 'guess_the_number/computer_game.html', game)
 
                 # фильтрует варианты по "коровам"
-                def cows_filter(cows, number, variants):
+                def cows_filter(cows_and_bulls, number, variants):
                     possible_variants = []
-                    pos_comb = list(combinations(number, cows))
+                    pos_comb = list(combinations(number, cows_and_bulls))
                     for comb in pos_comb:
                         for num in variants:
                             if set(comb).issubset(set(num)) and set(
@@ -124,7 +123,7 @@ def game_process(request):
                 game['move'] += 1
 
                 game['all_numbers'] = bulls_filter(game['bulls'], game['my_number'], game['all_numbers'])
-                game['all_numbers'] = cows_filter(game['cows'], game['my_number'], game['all_numbers'])
+                game['all_numbers'] = cows_filter(game['cows'] + game['bulls'], game['my_number'], game['all_numbers'])
 
                 try:
                     game['my_number'] = ''.join(choice(game['all_numbers']))
@@ -138,7 +137,7 @@ def game_process(request):
         else:
             form = GameWithComputerForm()
 
-        cache.set(1, game)
+        cache.set(request.session.session_key, game)
         game.update({'form': form})
         return render(request, 'guess_the_number/computer_game.html', game)
 
