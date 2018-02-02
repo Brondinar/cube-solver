@@ -113,7 +113,7 @@
         </tr>
     </table>
     </div>
-    <form action="{% url "cube_solver:solve" %}" method="post">
+    <form action="{% url "cube_solver:solve" %}" method="post" target="_blank">
         {% csrf_token %}
         <input class="hidden-input" id="cubeStringInput" name="cube" type="text" value=""/>
         <input type="button" onclick="randomFilling()" value="Случайный кубик"/>
