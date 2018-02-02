@@ -6,7 +6,7 @@
 </head>
 <body>
     {% load staticfiles %}
-    <link rel="stylesheet" type="text/css" href="{% static 'guess_the_number/pc_style.css' %}" />
+    <link rel="stylesheet" type="text/css" href="{% static 'guess_the_number/cg_style.css' %}" />
     {% if game_over %}<p>Я отгадал число на {{ move }}-й попытке.</p>{% endif %}
     {% if error_message %}<p>{{ error_message }}</p>{% endif %}
     <p class="game_info">Ход {{ move }}. Моё число: {{ my_number }}</p>
@@ -26,6 +26,7 @@
                     <td><input type="submit" value="Отправить" /></td></tr></table>
         </form>
     {% endif %}
-    <a class="return" href="/guess_the_number/">Вернуться назад</a>
+    <a class="return" onclick="return confirm('Вы уверены, что хотите покинуть игру?')"
+       href="/guess_the_number/">Вернуться назад</a>
 </body>
 </html>

@@ -1,0 +1,36 @@
+td.block {
+    width: 30px;
+    height: 30px;
+    border: 1px solid black;
+    background-color: grey;
+    -webkit-border-radius: 4px;
+    -moz-border-radius: 4px;
+    border-radius: 4px;
+}
+
+td.block:hover {
+    width: 26px;
+    height: 26px;
+    border: 3px solid rgba(0,255,255, 0.8)
+}
+
+.hidden-input {
+    display: none;
+}
+
+.cube {
+    margin-bottom: 10px;
+}
+
+.cube-face.center {
+    display: inline-block;
+}
+
+.cube-face.top {
+    margin-bottom: 4px;
+    margin-left: 114px;
+}
+
+.cube-face.bottom {
+    margin-left: 114px;
+}

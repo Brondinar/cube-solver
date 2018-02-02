@@ -23,7 +23,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = '495g#*1*27magc1-r0%msote&ne+(92b*kfv*rf)!i$p@)7($!'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['localhost', 'brondinar.pythonanywhere.com']
 
@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'polls_djbook_tutorial',
     'guess_the_number',
+    'cube_solver',
 ]
 
 MIDDLEWARE = [

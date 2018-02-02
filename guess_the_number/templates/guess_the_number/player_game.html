@@ -18,14 +18,14 @@
                 <input type="submit" value="Отправить" />
             </form>
         {% endif %}
-        <br><a id="id_return" href="/guess_the_number/">Вернуться назад</a>
+        <br><a id="id_return" onclick="return confirm('Вы уверены, что хотите покинуть игру?')"
+               href="/guess_the_number/">Вернуться назад</a>
     </div>
     <div class="player_numbers">
         {% for number in player_numbers %}
             <p>{{ number.move }}. {{ number.number }} -> {{ number.cows }}:{{ number.bulls }}</p>
         {% endfor %}
     </div>
-    <div class="footer"></div>
 
     <script>
 

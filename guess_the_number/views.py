@@ -1,13 +1,14 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseForbidden
 from django import forms
 from django.core.validators import RegexValidator, MinLengthValidator, MaxLengthValidator
 from django.core.exceptions import ValidationError
 from django.core.cache import cache
+from django.db import models
 
 
 from .forms import InitializeForm
-from .models import GameData
+from .models import OnlineGameData
 
 from random import choice
 from itertools import permutations, combinations
@@ -20,21 +21,34 @@ def game_index(request):
     if request.method == 'POST':
         form = InitializeForm(request.POST)
         if form.is_valid():
-            how_many_digits = int(request.POST['how_many_digits'])
-            # game_id должен быть уникальным для каждой игры
-            game_id = request.session.session_key
-            request.session['game_type'] = request.POST['game_type']
-            if request.POST['game_type'] == '1':
-                secret_number = ''.join(choice(list(permutations("0123456789", how_many_digits))))
-                # game_data = GameData(id=game_id, secret_number=secret_number, move=1, cows=0, bulls=0)
-                # game_data.save()
-                cache.set(game_id, {'secret_number': secret_number, 'move': 1, 'cows': 0, 'bulls': 0,
-                                    'digits': how_many_digits, 'player_numbers': []})
+
+            # блок кода для одного игрока
+            if request.POST['player_type'] == 'one':
+                how_many_digits = int(request.POST['how_many_digits'])
+                game_id = request.session.session_key
+                request.session['game_type'] = request.POST['game_type']
+                if request.POST['game_type'] == '1':
+                    secret_number = ''.join(choice(list(permutations("0123456789", how_many_digits))))
+                    # game_data = GameData(id=game_id, secret_number=secret_number, move=1, cows=0, bulls=0)
+                    # game_data.save()
+                    cache.set(game_id, {'secret_number': secret_number, 'move': 1, 'cows': 0, 'bulls': 0,
+                                        'digits': how_many_digits, 'player_numbers': []})
+                else:
+                    all_numbers = list(permutations("0123456789", how_many_digits))
+                    cache.set(game_id, {'all_numbers': all_numbers, 'move': 1, 'digits': how_many_digits,
+                                        'my_number': ''.join(choice(all_numbers)), 'game_over': False})
+                return redirect('/guess_the_number/game/')
+
+            # блок кода для двух игроков
             else:
-                all_numbers = list(permutations("0123456789", how_many_digits))
-                cache.set(game_id, {'all_numbers': all_numbers, 'move': 1, 'digits': how_many_digits,
-                                    'my_number': ''.join(choice(all_numbers)), 'game_over': False})
-            return redirect('/guess_the_number/game/')
+                player = request.session.session_key
+                waiting_players = cache.get('waiting_players')
+                if waiting_players is None:
+                    cache.set('waiting_players', {'players': player})
+                elif player not in waiting_players['players']:
+                    waiting_players['players'].append(player)
+                    cache.set('waiting_players', waiting_players['players'])
+                redirect('/guess_the_number/online-game/')
     else:
         form = InitializeForm()
 
@@ -45,6 +59,10 @@ def game_index(request):
 def game_process(request):
     # game = GameData.objects.get(pk=game_id)
     game = cache.get(request.session.session_key)
+    if game is None:
+        return HttpResponseForbidden("""<p>Время сессии вышло. Вернитесь назад, чтобы начать сначала.</p>
+                            <a class="return" href="/guess_the_number/">Вернуться назад</a>""")
+
     def game_with_human():
         class GameWithHumanForm(forms.Form):
             player_number = forms.CharField(label='Ваше число', max_length=game['digits'],
@@ -145,3 +163,6 @@ def game_process(request):
         return game_with_human()
     else:
         return game_with_computer()
+
+def multiplayer_process(request):
+    pass

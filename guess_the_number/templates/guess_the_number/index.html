@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Угадай число</title>
+    <title>Guess The Number</title>
 </head>
 <body>
 {% load staticfiles %}
@@ -12,7 +12,13 @@
         {% csrf_token %}
         <table>
             <tr>
-                <td>{{ form.game_type.label }}</td>
+                <td>{{ form.player_type.label }}</td>
+                {% for radio in form.player_type %}
+                    <td>{{ radio }}</td>
+                {% endfor %}
+            </tr>
+            <tr>
+                <td></td>
                 {% for radio in form.game_type %}
                     <td>{{ radio }}</td>
                 {% endfor %}

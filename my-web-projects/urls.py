@@ -25,5 +25,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^guess_the_number/', include('guess_the_number.urls')),
     url(r'^polls_djbook_tutorial/', include('polls_djbook_tutorial.urls')),
+    url(r'^cube_solver/', include('cube_solver.urls')),
     url(r'^$', home_page)
 ]

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Cube Solver</title>
+</head>
+<body>
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'cube_solver/index_style.css' %}" />
+
+    {% if error_message %}{{ error_message }}{% endif %}
+    <div class="cube">
+    <table class="cube-face top">
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+    </table>
+    <table class="cube-face center">
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+    </table>
+    <table class="cube-face center">
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+    </table>
+    <table class="cube-face center">
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+    </table>
+    <table class="cube-face center">
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+    </table>
+    <table class="cube-face bottom">
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+        <tr>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+            <td class="block" onclick="changeColor(this)"></td>
+        </tr>
+    </table>
+    </div>
+    <form action="{% url "cube_solver:solve" %}" method="post">
+        {% csrf_token %}
+        <input class="hidden-input" id="cubeStringInput" name="cube" type="text" value=""/>
+        <input type="button" onclick="randomFilling()" value="Случайный кубик"/>
+        <input type="submit" onclick="findSolution()" value="Найти решение"/>
+    </form>
+    <script src="{% static 'cube_solver/index_script.js' %}"></script>
+</body>
+</html>

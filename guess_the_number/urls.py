@@ -6,4 +6,5 @@ app_name = 'guess_the_number'
 urlpatterns = [
     url(r'^$', views.game_index, name='index'),
     url(r'^game/$', views.game_process, name='game_process'),
+    url(r'^online-game/$', views.multiplayer_process, name='multiplayer_process')
 ]
