@@ -1,0 +1,7 @@
+cffi==1.11.5
+Django==2.1.2
+future==0.17.0
+kociemba==1.2
+pkg-resources==0.0.0
+pycparser==2.19
+pytz==2018.7
