@@ -1,4 +1,3 @@
-<h1>Hello, world!</h1>
-
-<p>This is my first web project, which I will update as I study web technologies.
-In the future, I would like to get a job in this field.</p>
+# Rubik's Cube Solver
+A simple application for assembling the Rubik's Cube, based on the Kociemba algorithm.
+[Demo](http://brondinar.pythonanywhere.com/)
