@@ -1,10 +1,7 @@
 *.pyc
 *~
 __pycache__
-myvenv
+cubevenv/
 db.sqlite3
-<<<<<<< HEAD
-/static
-=======
-/static
->>>>>>> 85f32683d90ee52a2e948b2f363c71645b3f2e3b
+static/
+.idea/
